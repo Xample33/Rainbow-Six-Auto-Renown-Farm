@@ -1,30 +1,54 @@
-from ast import For
-from os import system
-from re import S
+import os
 import pyautogui
 import pydirectinput as pdi
 import time
-import cv2
-import os
-import pytesseract
-from datetime import date, datetime, timedelta
 from colorama import Fore
 from colorama import Style
-
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+from pynput import keyboard
+from threading import Thread
 
 pdi.FAILSAFE = True
 
-global state
-state = ''
-global renown
-renown = []
+banner = """
+            ██████╗  █████╗ ██╗███╗   ██╗██████╗  ██████╗ ██╗    ██╗    ███████╗██╗██╗  ██╗               
+            ██╔══██╗██╔══██╗██║████╗  ██║██╔══██╗██╔═══██╗██║    ██║    ██╔════╝██║╚██╗██╔╝               
+            ██████╔╝███████║██║██╔██╗ ██║██████╔╝██║   ██║██║ █╗ ██║    ███████╗██║ ╚███╔╝                
+            ██╔══██╗██╔══██║██║██║╚██╗██║██╔══██╗██║   ██║██║███╗██║    ╚════██║██║ ██╔██╗                
+            ██║  ██║██║  ██║██║██║ ╚████║██████╔╝╚██████╔╝╚███╔███╔╝    ███████║██║██╔╝ ██╗               
+            ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚═════╝  ╚═════╝  ╚══╝╚══╝     ╚══════╝╚═╝╚═╝  ╚═╝               
+                                                                                                        
+            ██████╗ ███████╗███╗   ██╗ ██████╗ ██╗    ██╗███╗   ██╗    ███████╗ █████╗ ██████╗ ███╗   ███╗
+            ██╔══██╗██╔════╝████╗  ██║██╔═══██╗██║    ██║████╗  ██║    ██╔════╝██╔══██╗██╔══██╗████╗ ████║
+            ██████╔╝█████╗  ██╔██╗ ██║██║   ██║██║ █╗ ██║██╔██╗ ██║    █████╗  ███████║██████╔╝██╔████╔██║
+            ██╔══██╗██╔══╝  ██║╚██╗██║██║   ██║██║███╗██║██║╚██╗██║    ██╔══╝  ██╔══██║██╔══██╗██║╚██╔╝██║
+            ██║  ██║███████╗██║ ╚████║╚██████╔╝╚███╔███╔╝██║ ╚████║    ██║     ██║  ██║██║  ██║██║ ╚═╝ ██║
+            ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═══╝    ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝ by Xample33
+            """
+
+def config():
+    loop = True
+    
+    print('Config file don\'t found, creating..')
+    print('This is the inital config for the bot.')
+    
+    while loop == True:
+        operator = input('\nDo you have DOC operator? (yes/no) -> ')
+        if operator == 'yes':
+            doc = True 
+            loop = False
+        elif operator == 'no':
+            doc = False
+            loop = False
+        else:
+            print("Invalid input, valid input are \"yes\" and \"no\"")
+    file = open('config.txt','w')
+    file.write(f'DOC={doc}')
 
 def locate_menu():
     status('Looking for menu button.')
     for i in range(30):
-        time.sleep(0.1)
-        if pyautogui.locateOnScreen('images\\menu.png', confidence=0.8):
+        time.sleep(0.2)
+        if pyautogui.locateOnScreen('images\\play.png', confidence=0.8):
             pdi.press("enter")
             return
         else:
@@ -32,147 +56,164 @@ def locate_menu():
             pdi.press("down")
             for i in range(2): pdi.press("left")
         
-    status('ERROR: Unable to find menu button.')
+    status(f'{Fore.RED}ERROR: Unable to find menu button.')
 
 def locate_training():
     status('Looking for training button.')
     for i in range(30):
         time.sleep(0.1)
-        if pyautogui.locateOnScreen('images\\training.png', confidence=0.6):
+        if pyautogui.locateOnScreen('images\\training.png', confidence=0.8):
             pdi.press("enter")
             return
         else:
             pdi.press("right")
     
-    status('Unable to find training button.')
+    status(f'{Fore.RED}ERROR: Unable to find training button.')
 
 def locate_lone_wolf():  
     status('Setting realistic mode')
+    time.sleep(1)
     for i in range(2): pdi.press("f")
     status('Looking for lone wolf button.')
     for i in range(30):
-        time.sleep(0.1)
-        if pyautogui.locateOnScreen('images\\lone_wolf.png', confidence=0.6):
+        time.sleep(0.2)
+        if pyautogui.locateOnScreen('images\\lone_wolf.png', confidence=0.8):
             pdi.press("enter")
             return
         else:
             pdi.press("right")
 
-    status('Unable to find lone wolf button.')
+    status(f'{Fore.RED}ERROR: Unable to find lone wolf button.')
 
-def locate_vote():
+def locate_spawn():
     status('Selecting map.')
-    for i in range(30):
+    for i in range(100):
         time.sleep(0.1)
-        if pyautogui.locateOnScreen('images\\vote.png', confidence=0.8):
+        if pyautogui.locateOnScreen('images\\spawn.png', confidence=0.8):
             pdi.press("down")
-            pdi.press("enter")
-            status('Selecting operator.')
-            time.sleep(1)
-            pdi.press("enter")
-            status('Confirm loadout.')
-            time.sleep(1)
             pdi.press("enter")
             return
         else:
             time.sleep(0.1)
         
-    status('Unable to find vote button.')
+    status(f'{Fore.RED}ERROR: Unable to find vote button.')
+
+def locate_operator():
+    status('Looking for operator.')
+    if doc == True:
+        for i in range(5): pdi.press("right")
+        for i in range(30):
+            time.sleep(0.3)
+            if pyautogui.locateOnScreen('images\\doc.png', confidence=0.8):
+                pdi.press("enter")
+                time.sleep(1)
+                status('Confirm loadout.')
+                pdi.press("enter")
+                pdi.press("enter")
+                pdi.press("enter")
+                return
+            else:
+                pdi.press("right")
+    else: 
+        pdi.press("enter")
+        time.sleep(1)
+        status('Confirm loadout.')
+        pdi.press("enter")
+        pdi.press("enter")
+        pdi.press("enter")
+        return
+
+    status(f'{Fore.RED}ERROR: Unable to find operator button.')
 
 def locate_bonus():
     status('Waiting for the match to end.')
     for i in range(100):
         if pyautogui.locateOnScreen('images\\bonus.png', confidence=0.8):
             pdi.press("tab")
-            status('Calculating renown.')
-            time.sleep(3.7)
-            screen = pyautogui.screenshot()
-            screen.save('screen\\screen.png')
-            pdi.press("enter")
+            time.sleep(1)
+            for i in range(5): pdi.press("enter")
             return
         else:
-            time.sleep(1)
+            time.sleep(5)
 
-    status('Unable to find bonus button.')
-
-def fetch_renown():
-    if games_count != len(renown):
-        try:
-            img = cv2.imread('screen\\screen.png')
-            cropped_image = img[600:650, 441:465]
-            renown.append(int(pytesseract.image_to_string(cropped_image)))
-            if os.path.exists("screen\\screen.png"):
-                os.remove("screen\\screen.png")
-        except:
-            if os.path.exists("screen\\screen.png"):
-                os.remove("screen\\screen.png")
-            pass
+    status(f'{Fore.RED}ERROR: Unable to find bonus button.')
 
 def status(state):
-    system('cls')
-    fetch_renown()
-    total_renown = 0
-    for i in range(len(renown)):
-        if len(renown) == 0:
-            pass
-        else:
-            total_renown += renown[i]
-    print('[Rainbow six auto renown farm bot by Xample33]')
+    err = False
+    stop = False
+    if 'ERROR' in state: err = True
+    if 'stopped' in state: stop = True
+    os.system('cls')
+    print(banner)
     print(f'\nCurrent action:{Fore.LIGHTGREEN_EX} {state} {Style.RESET_ALL}')
-    print(f'Games count:{Fore.LIGHTBLUE_EX} {games_count} {Style.RESET_ALL} (next in progress)')
-    print(f'Time ellapsed in last match:{Fore.LIGHTRED_EX} {timedelta(seconds=int(match_time))} {Style.RESET_ALL}')
-    print(f'Total time ellapsed in past match:{Fore.LIGHTRED_EX} {timedelta(seconds=int(total_time))} {Style.RESET_ALL}')
-    print(f'Total time ellapsed since bot start:{Fore.LIGHTRED_EX} {timedelta(seconds=int(total_bot_time))} {Style.RESET_ALL}')
-    print(f'Renown earned: {renown} ={Fore.LIGHTYELLOW_EX} {Style.BRIGHT} {total_renown} {Style.RESET_ALL}')
+    print(f'Games count:{Fore.LIGHTBLUE_EX} {games_count} {Style.RESET_ALL}(next in progress)')
+    print('Press [ + ] to exit')
+    if err: 
+        print('\nError detected, please retry.')
+        input('Press enter to exit...')
+        exit()
+    if stop:
+        print('\nStopped by user.')
+        input('Press enter to exit...')
+        exit()
+
 
 def main():
     global games_count
-    global match_time
-    global total_time
-    global total_bot_time
-
     games_count = 0
-    match_time = 0
-    total_time = 0
-    total_bot_time = 0
+    global doc
+    doc = False
+    print(banner)
 
-    print('[Rainbow six auto renown farm bot by Xample33]')
-    print('\nSwitch onto R6S window and don\'t touch mouse or keyboard.')
-    print('To stop the bot close this window or go in the top left corner with mouse.')
+    if os.path.exists('config.txt') == False:
+        config()
+    else: 
+        file = open('config.txt','r')
+        read = file.read()
+        if read == 'DOC=True':
+            doc = True
+        if read == 'DOC=False':
+            doc = False
+        else: 
+            file.close()
+            print('Invalid config file.')
+            os.remove("config.txt")
+            config()
 
-    #input('\nPress enter to start...')
-
+    input('\nPress enter to start...')
     for i in range(5):
-        system('cls')
+        os.system('cls')
+        print(banner)
         print(f'Bot starting in {5-i} seconds..')
         time.sleep(1)
-
-    start_tot = datetime.now() 
 
     locate_menu()
 
     locate_training()
-
+    
     locate_lone_wolf()
-
     while 1:
-        start = datetime.now() 
-
-        locate_vote()
+        locate_spawn()
+        
+        locate_operator()
 
         locate_bonus()
-
-        stop = datetime.now()
-        match_time = (stop - start).total_seconds()
-        stop_tot = datetime.now()
-        total_bot_time = (stop_tot - start_tot).total_seconds()
-
         games_count += 1
 
-        if games_count == 0:
-            total_time = match_time
-        else:
-            total_time  += match_time
+def on_press(key, abortKey='+'):    
+    try:
+        k = key.char
+    except:
+        k = key.name  
+
+    if k == abortKey:
+        status(f'{Fore.RED}stopped')
+        return False
 
 if __name__=='__main__':
-   main()
+    listener = keyboard.Listener(on_press=on_press)
+    listener.start()
+
+    Thread(target=main, args=(), name='main', daemon=True).start()
+
+    listener.join() 
