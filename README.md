@@ -1,4 +1,5 @@
 # Rainbow Six Siege Auto Renown Farm
+[![Commit](https://img.shields.io/github/downloads/Xample33/Rainbow-Six-Auto-Renown-Farm/total)
 
 This is a simply python bot that can farm renown automatic.
 
