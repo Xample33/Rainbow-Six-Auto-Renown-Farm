@@ -26,19 +26,17 @@ banner = """
             """
 
 def config():
-    loop = True
-    
     print('Config file don\'t found, creating..')
     print('This is the inital config for the bot.')
     
-    while loop == True:
+    while 1:
         operator = input('\nDo you have DOC operator? (yes/no) -> ')
         if operator == 'yes':
             doc = True 
-            loop = False
+            break
         elif operator == 'no':
             doc = False
-            loop = False
+            break
         else:
             print("Invalid input, valid input are \"yes\" and \"no\"")
     file = open('config.txt','w')
@@ -108,9 +106,7 @@ def locate_operator():
                 pdi.press("enter")
                 time.sleep(1)
                 status('Confirm loadout.')
-                pdi.press("enter")
-                pdi.press("enter")
-                pdi.press("enter")
+                for i in range(3): pdi.press("enter")
                 return
             else:
                 pdi.press("right")
@@ -118,9 +114,7 @@ def locate_operator():
         pdi.press("enter")
         time.sleep(1)
         status('Confirm loadout.')
-        pdi.press("enter")
-        pdi.press("enter")
-        pdi.press("enter")
+        for i in range(3): pdi.press("enter")
         return
 
     status(f'{Fore.RED}ERROR: Unable to find operator button.')
@@ -143,6 +137,7 @@ def status(state):
     stop = False
     if 'ERROR' in state: err = True
     if 'stopped' in state: stop = True
+            
     os.system('cls')
     print(banner)
     print(f'\nCurrent action:{Fore.LIGHTGREEN_EX} {state} {Style.RESET_ALL}')
