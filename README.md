@@ -9,4 +9,4 @@ This is a simply python bot that can farm renown automatic.
 **2**: Run "run.bat" <br>
 **3**: Enjoy <br>
 <br>
-**NOTE: some antivirus maybe block the execution, disable it or add run.bat to exceptions list.
+### **NOTE**: some antivirus maybe block the execution, disable it or add run.bat to exceptions list.
