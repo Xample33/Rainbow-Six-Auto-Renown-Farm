@@ -3,11 +3,8 @@
 ![Size](https://img.shields.io/github/languages/code-size/Xample33/Rainbow-Six-Auto-Renown-Farm)
 
 This is a simply python bot that can farm renown automatic.
+With booster you can obtain up to 1100 renown/h
 
-### **How to use** <br>
-**1**: Download the source code <br>
-**2**: Install all libraries with ```pip install -r requirements.txt``` <br>
-**3**: Run "run.bat" <br>
-**4**: Enjoy! <br>
+### **Check the [wiki](https://github.com/Xample33/Rainbow-Six-Auto-Renown-Farm/wiki) for instructions.
 <br>
 ### **NOTE**: some antivirus maybe block the execution, disable it or add run.bat and bot.py to exceptions list.
