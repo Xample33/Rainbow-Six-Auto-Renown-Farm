@@ -102,7 +102,7 @@ def locate_operator():
         for i in range(5): pdi.press("right")
         for i in range(30):
             time.sleep(0.3)
-            if pyautogui.locateOnScreen('images\\doc.png', confidence=0.7):
+            if pyautogui.locateOnScreen('images\\doc.png', confidence=0.8):
                 pdi.press("enter")
                 time.sleep(1)
                 status('Confirm loadout.')
