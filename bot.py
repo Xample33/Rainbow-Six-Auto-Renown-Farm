@@ -39,8 +39,8 @@ def config():
             break
         else:
             print("Invalid input, valid input are \"yes\" and \"no\"")
-    file = open('config.txt','w')
-    file.write(f'DOC={doc}')
+    with open('config.txt','w') as f:
+        f.write(f'DOC={doc}')
 
 def locate_menu():
     status('Looking for menu button.')
@@ -70,7 +70,7 @@ def locate_training():
 
 def locate_lone_wolf():  
     status('Setting realistic mode')
-    time.sleep(1)
+    time.sleep(0.3)
     for i in range(2): pdi.press("f")
     status('Looking for lone wolf button.')
     for i in range(30):
@@ -98,6 +98,7 @@ def locate_spawn():
 
 def locate_operator():
     status('Looking for operator.')
+    time.sleep(0.3)
     if doc == True:
         for i in range(5): pdi.press("right")
         for i in range(30):
@@ -121,14 +122,16 @@ def locate_operator():
 
 def locate_bonus():
     status('Waiting for the match to end.')
-    for i in range(100):
-        if pyautogui.locateOnScreen('images\\bonus.png', confidence=0.8):
+    for i in range(200):
+        if pyautogui.locateOnScreen('images\\bonus.png', confidence=0.7):
+            time.sleep(0.4)
             pdi.press("tab")
-            time.sleep(1)
-            for i in range(5): pdi.press("enter")
+            for i in range(5): 
+                time.sleep(0.4)
+                pdi.press("enter")
             return
         else:
-            time.sleep(5)
+            time.sleep(3)
 
     status(f'{Fore.RED}ERROR: Unable to find bonus button.')
 
@@ -160,20 +163,19 @@ def main():
     doc = False
     print(banner)
 
-    if os.path.exists('config.txt') == False:
+    if not os.path.exists('config.txt'):
         config()
     else: 
-        file = open('config.txt','r')
-        read = file.read()
-        if read == 'DOC=True':
-            doc = True
-        if read == 'DOC=False':
-            doc = False
-        else: 
-            file.close()
-            print('Invalid config file.')
-            os.remove("config.txt")
-            config()
+        with open('config.txt','r') as f:
+            read = f.read()
+            if read == 'DOC=True':
+                doc = True
+            elif read == 'DOC=False':
+                doc = False
+            else:
+                print('Invalid config file.')
+                os.remove("config.txt")
+                config()
 
     input('\nPress enter to start...')
     for i in range(5):
