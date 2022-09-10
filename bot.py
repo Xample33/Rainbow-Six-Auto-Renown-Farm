@@ -7,7 +7,7 @@ from colorama import Style
 from pynput import keyboard
 from threading import Thread
 
-pdi.FAILSAFE = True
+pdi.FAILSAFE = False
 
 banner = """
             ██████╗  █████╗ ██╗███╗   ██╗██████╗  ██████╗ ██╗    ██╗    ███████╗██╗██╗  ██╗               
@@ -36,7 +36,7 @@ def config():
             break
         elif operator == 'no':
             doc = False
-            break
+            break  
         else:
             print("Invalid input, valid input are \"yes\" and \"no\"")
     with open('config.txt','w') as f:
@@ -46,7 +46,7 @@ def locate_menu():
     status('Looking for menu button.')
     for i in range(30):
         time.sleep(0.2)
-        if pyautogui.locateOnScreen('images\\play.png', confidence=0.6):
+        if pyautogui.locateOnScreen('assets\\play.png', confidence=0.6):
             pdi.press("enter")
             return
         else:
@@ -60,7 +60,7 @@ def locate_training():
     status('Looking for training button.')
     for i in range(30):
         time.sleep(0.3)
-        if pyautogui.locateOnScreen('images\\training.png', confidence=0.6):
+        if pyautogui.locateOnScreen('assets\\training.png', confidence=0.6):
             pdi.press("enter")
             return
         else:
@@ -75,7 +75,7 @@ def locate_lone_wolf():
     status('Looking for lone wolf button.')
     for i in range(30):
         time.sleep(0.5)
-        if pyautogui.locateOnScreen('images\\lone_wolf.png', confidence=0.7):
+        if pyautogui.locateOnScreen('assets\\lone_wolf.png', confidence=0.7):
             pdi.press("enter")
             return
         else:
@@ -87,7 +87,7 @@ def locate_spawn():
     status('Selecting map.')
     for i in range(100):
         time.sleep(0.1)
-        if pyautogui.locateOnScreen('images\\spawn.png', confidence=0.6):
+        if pyautogui.locateOnScreen('assets\\spawn.png', confidence=0.6):
             pdi.press("down")
             pdi.press("enter")
             return
@@ -103,7 +103,7 @@ def locate_operator():
         for i in range(5): pdi.press("right")
         for i in range(30):
             time.sleep(0.3)
-            if pyautogui.locateOnScreen('images\\doc.png', confidence=0.8):
+            if pyautogui.locateOnScreen('assets\\doc.png', confidence=0.8):
                 pdi.press("enter")
                 time.sleep(1)
                 status('Confirm loadout.')
@@ -123,7 +123,7 @@ def locate_operator():
 def locate_bonus():
     status('Waiting for the match to end.')
     for i in range(200):
-        if pyautogui.locateOnScreen('images\\bonus.png', confidence=0.7):
+        if pyautogui.locateOnScreen('assets\\bonus.png', confidence=0.7):
             time.sleep(0.4)
             pdi.press("tab")
             for i in range(5): 
@@ -181,7 +181,7 @@ def main():
     for i in range(5):
         os.system('cls')
         print(banner)
-        print(f'Bot starting in {5-i} seconds..')
+        print(f'Bot starting in {5-i} seconds, switch to r6 window!')
         time.sleep(1)
 
     locate_menu()
