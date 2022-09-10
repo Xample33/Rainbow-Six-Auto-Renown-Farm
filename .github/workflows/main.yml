@@ -33,8 +33,6 @@ jobs:
           echo D | xcopy assets dist\assets /e
       - uses: actions/upload-artifact@v3
         with:
-          name: bot-artifact
+          name: Rainbow-Six-Auto-Renown-Farm-For-Windows
           path: dist
-      
-
-
+          
