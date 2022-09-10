@@ -1,5 +1,6 @@
-pyautogui
-pydirectinput
-pynput
-colorama
-Pillow
+colorama~=0.4.4
+PyAutoGUI~=0.9.53
+PyDirectInput~=1.0.4
+pynput~=1.7.6
+Pillow~=9.0.1
+opencv_python~=4.6.0.66
