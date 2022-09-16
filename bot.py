@@ -1,13 +1,12 @@
-import os
-import pyautogui
-import pydirectinput as pdi
-import time
-from colorama import Fore
-from colorama import Style
+from os import path, remove, system
+from pyautogui import size, locateOnScreen
+from pydirectinput import FAILSAFE, press
+from colorama import Fore, Style
 from pynput import keyboard
 from threading import Thread
+import cv2, time
 
-pdi.FAILSAFE = False
+FAILSAFE = False
 
 banner = """
             ██████╗  █████╗ ██╗███╗   ██╗██████╗  ██████╗ ██╗    ██╗    ███████╗██╗██╗  ██╗               
@@ -25,186 +24,155 @@ banner = """
             ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═══╝    ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝ by Xample33
             """
 
+def check_size():
+    if 1920 and 1080 in size():
+        return 'assets\\1920x1080'
+    elif 1366 and 768 in size():
+        return 'assets\\1366x768'
+    elif 1360 and 768 in size():
+        return 'assets\\1366x768'
+    else:
+        return 'assets\\1920x1080'
+    
 def config():
-    print('Config file don\'t found, creating..')
-    print('This is the inital config for the bot.')
-    
-    while 1:
-        operator = input('\nDo you have DOC operator? (yes/no) -> ')
-        if operator == 'yes':
-            doc = True 
-            break
-        elif operator == 'no':
-            doc = False
-            break  
-        else:
-            print("Invalid input, valid input are \"yes\" and \"no\"")
-    with open('config.txt','w') as f:
-        f.write(f'DOC={doc}')
-
-def locate_menu():
-    status('Looking for menu button.')
-    for i in range(30):
-        time.sleep(0.2)
-        if pyautogui.locateOnScreen('assets\\play.png', confidence=0.6):
-            pdi.press("enter")
-            return
-        else:
-            for i in range(5): pdi.press("up")
-            pdi.press("down")
-            for i in range(2): pdi.press("left")
-        
-    status(f'{Fore.RED}ERROR: Unable to find menu button.')
-
-def locate_training():
-    status('Looking for training button.')
-    for i in range(30):
-        time.sleep(0.3)
-        if pyautogui.locateOnScreen('assets\\training.png', confidence=0.6):
-            pdi.press("enter")
-            return
-        else:
-            pdi.press("right")
-    
-    status(f'{Fore.RED}ERROR: Unable to find training button.')
-
-def locate_lone_wolf():  
-    status('Setting realistic mode')
-    time.sleep(0.3)
-    for i in range(2): pdi.press("f")
-    status('Looking for lone wolf button.')
-    for i in range(30):
-        time.sleep(0.5)
-        if pyautogui.locateOnScreen('assets\\lone_wolf.png', confidence=0.7):
-            pdi.press("enter")
-            return
-        else:
-            pdi.press("right")
-
-    status(f'{Fore.RED}ERROR: Unable to find lone wolf button.')
-
-def locate_spawn():
-    status('Selecting map.')
-    for i in range(100):
-        time.sleep(0.1)
-        if pyautogui.locateOnScreen('assets\\spawn.png', confidence=0.6):
-            pdi.press("down")
-            pdi.press("enter")
-            return
-        else:
-            time.sleep(0.1)
-        
-    status(f'{Fore.RED}ERROR: Unable to find vote button.')
-
-def locate_operator():
-    status('Looking for operator.')
-    time.sleep(0.3)
-    if doc == True:
-        for i in range(5): pdi.press("right")
-        for i in range(30):
-            time.sleep(0.3)
-            if pyautogui.locateOnScreen('assets\\doc.png', confidence=0.8):
-                pdi.press("enter")
-                time.sleep(1)
-                status('Confirm loadout.')
-                for i in range(3): pdi.press("enter")
-                return
-            else:
-                pdi.press("right")
-    else: 
-        pdi.press("enter")
-        time.sleep(1)
-        status('Confirm loadout.')
-        for i in range(3): pdi.press("enter")
-        return
-
-    status(f'{Fore.RED}ERROR: Unable to find operator button.')
-
-def locate_bonus():
-    status('Waiting for the match to end.')
-    for i in range(200):
-        if pyautogui.locateOnScreen('assets\\bonus.png', confidence=0.7):
-            time.sleep(0.4)
-            pdi.press("tab")
-            for i in range(5): 
-                time.sleep(0.4)
-                pdi.press("enter")
-            return
-        else:
-            time.sleep(3)
-
-    status(f'{Fore.RED}ERROR: Unable to find bonus button.')
-
-def status(state):
-    err = False
-    stop = False
-    if 'ERROR' in state: err = True
-    if 'stopped' in state: stop = True
-            
-    os.system('cls')
-    print(banner)
-    print(f'\nCurrent action:{Fore.LIGHTGREEN_EX} {state} {Style.RESET_ALL}')
-    print(f'Games count:{Fore.LIGHTBLUE_EX} {games_count} {Style.RESET_ALL}(next in progress)')
-    print('Press [ + ] to exit')
-    if err: 
-        print('\nError detected, please retry.')
-        input('Press enter to exit...')
-        exit()
-    if stop:
-        print('\nStopped by user.')
-        input('Press enter to exit...')
-        exit()
-
-
-def main():
-    global games_count
-    games_count = 0
-    global doc
-    doc = False
-    print(banner)
-
-    if not os.path.exists('config.txt'):
-        config()
-    else: 
+    if path.exists('config.txt'):
         with open('config.txt','r') as f:
             read = f.read()
             if read == 'DOC=True':
-                doc = True
+                return True
             elif read == 'DOC=False':
-                doc = False
+                return False
             else:
-                print('Invalid config file.')
-                os.remove("config.txt")
-                config()
+                remove("config.txt")
+    else:
+        print('Config file invalid or missing, creating..')
+        
+        while not doc:
+            operator = input('\nDo you have DOC operator? (yes/no) -> ')
 
+            if operator == 'yes':
+                doc = True 
+            elif operator == 'no':
+                doc = False  
+            else:
+                print("Invalid input, valid input are \"yes\" and \"no\"")
+
+            with open('config.txt','w') as f:
+                f.write(f'DOC={doc}')
+
+def locate(path,name):
+    status(name)
+    for i in range(100):
+        if locateOnScreen(f'{path}', confidence=0.7):
+            time.sleep(0.3)
+
+            if name == 'menu':
+                press('enter')
+                return
+            
+            elif name == 'training':
+                for i in range(3): press('right')
+                press('enter')
+                return
+
+            elif name == 'lonewolf':
+                for i in range(2): press('f')
+                press('right')
+                press('enter')
+                return
+
+            elif name == 'map':
+                press('enter')
+                return
+
+            elif (name == 'operator') and (config() == True):
+                for i in range(6): press("right")
+                press('enter')
+                time.sleep(1.5)
+                press('enter')
+                return
+            elif (name == 'operator') and (config() == False):
+                press('enter')
+                time.sleep(1.5)
+                press('enter')
+                return
+
+            elif name == 'bonus':
+                time.sleep(0.5)
+                press("tab")
+                for i in range(5): press("enter")
+                return
+
+            else:
+                print('not found')
+
+        else: 
+            if name == 'menu':
+                for i in range(5): press('up')
+                press('down')
+                for i in range(2): press('left') 
+
+            elif name == 'bonus':
+                time.sleep(2)
+
+            else:
+                time.sleep(0.5)
+
+    status(f'{Fore.RED}ERROR: Unable to find {name} button.')
+
+def status(state):
+    if 'ERROR' in state: state = f'{Fore.RED}ERROR' 
+    elif 'stopped' in state: state = f'{Fore.RED}stopped'
+
+    else: state = f'Looking for {state} button'    
+    system('cls')
+    print(banner)
+    print(f'\nCurrent action:{Fore.LIGHTGREEN_EX} {state} {Style.RESET_ALL}')
+    print(f'Games count:{Fore.LIGHTBLUE_EX} {match_count} {Style.RESET_ALL}(next in progress)')
+    print('Press [ + ] to exit')
+
+    if 'ERROR' in state: 
+        print('\nError detected, please retry.')
+        print('If you think that this is a bug, please open an issue on github.')
+        raise SystemExit
+
+    if 'stopped' in state:
+        print('\nStopped by user.')
+        raise SystemExit
+
+def main():
+    global match_count
+    match_count = 0
+    
+    print(banner)
     input('\nPress enter to start...')
     for i in range(5):
-        os.system('cls')
+        system('cls')
         print(banner)
         print(f'Bot starting in {5-i} seconds, switch to r6 window!')
         time.sleep(1)
 
-    locate_menu()
+    names = ['menu','training','lonewolf','map','operator','bonus']
 
-    locate_training()
-    
-    locate_lone_wolf()
     while 1:
-        locate_spawn()
-        
-        locate_operator()
+        pos = 0
+        if match_count == 0:
+            for element in ['play','training','lone_wolf','spawn','doc','bonus']:
+                locate(f'{check_size()}\{element}.png',names[pos])
+                pos += 1
+        else:
+            for element in ['spawn','doc','bonus']:
+                locate(f'{check_size()}\{element}.png',names[pos+3])
+                pos += 1
+        match_count += 1
 
-        locate_bonus()
-        games_count += 1
-
-def on_press(key, abortKey='+'):    
+def on_press(key, abortKey='+'):  
     try:
         k = key.char
     except:
         k = key.name  
-
     if k == abortKey:
-        status(f'{Fore.RED}stopped')
+        status('stopped')
         return False
 
 if __name__=='__main__':
@@ -212,5 +180,5 @@ if __name__=='__main__':
     listener.start()
 
     Thread(target=main, args=(), name='main', daemon=True).start()
-
+    
     listener.join() 
