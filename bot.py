@@ -121,7 +121,7 @@ def main():
     stop = False
     
     config()
-    
+    system('cls')
     print(u.banner())
     input('Press enter to start...')
     for i in range(5):
