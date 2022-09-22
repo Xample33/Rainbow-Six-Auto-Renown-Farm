@@ -38,7 +38,7 @@ def key_press(times, key):
     
 def locate(path,name):
     status(name)
-    for i in range(10):
+    for i in range(500):
         if locateOnScreen(f'{path}', confidence=0.7, grayscale=False, region = u.get_region(path)) and (not stop):
             if 'play' in name:
                 key_press(1,'enter')
