@@ -1,4 +1,5 @@
 from pyautogui import size
+from requests import get
 
 class utils:
     def banner():
@@ -17,6 +18,12 @@ class utils:
             ██║  ██║███████╗██║ ╚████║╚██████╔╝╚███╔███╔╝██║ ╚████║    ██║     ██║  ██║██║  ██║██║ ╚═╝ ██║
             ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═══╝    ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝ by Xample33
             """
+            
+    def check_for_updates(CURRENT_VERSION):
+        request = get('https://api.github.com/repos/Xample33/Rainbow-Six-Auto-Renown-Farm/tags').content
+        if not CURRENT_VERSION in str(request):
+            return f'This version ({CURRENT_VERSION}) is outdated.\nPlease download the latest version.'
+        else: return 'This is the latest version.'
 
     def abortkey():    
         return '+'

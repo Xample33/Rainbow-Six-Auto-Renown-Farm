@@ -7,7 +7,8 @@ from time import sleep
 from utils import utils as u
 import cv2
 
-FAILSAFE = False      
+FAILSAFE = False   
+CURRENT_VERSION = 'v2.1'   
     
 def config():
     if path.exists('config.txt'):
@@ -125,7 +126,8 @@ def main():
     config()
     system('cls')
     print(u.banner())
-    input('Press enter to start...')
+    print(u.check_for_updates(CURRENT_VERSION))
+    input('\nPress enter to start...')
     for i in range(5):
         system('cls')
         print(u.banner())
