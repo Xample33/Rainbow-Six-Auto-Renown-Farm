@@ -17,15 +17,17 @@ def config():
             elif read == 'DOC=False': return False
             else: remove('config.txt')
     else:
+        valid = True
         while 1:
             system('cls')
             print(u.banner())
             print('Config file invalid or missing, creating..')
+            if not valid: print('Invalid input, valid input are \"yes\" and \"no\"')
             operator = input('\nDo you have DOC operator? (yes/no) -> ')
 
             if operator == 'yes': doc = True; break
             elif operator == 'no': doc = False; break  
-            else: print('Invalid input, valid input are \"yes\" and \"no\"')
+            else: valid = False
 
         with open('config.txt','w') as f:
             f.write(f'DOC={doc}')
@@ -39,7 +41,7 @@ def key_press(times, key):
     
 def locate(path,name):
     status(name)
-    for i in range(10):
+    for i in range(500):
         if locateOnScreen(f'{path}', confidence=0.7, grayscale=False, region = u.get_region(path)) and (not stop):
             if 'play' in name:
                 key_press(1,'enter')
@@ -57,7 +59,7 @@ def locate(path,name):
                 key_press(1, 'enter')
                 return
 
-            elif 'map' in name:
+            elif 'location' in name:
                 sleep(0.2)
                 key_press(1, 'enter')
                 return
@@ -130,7 +132,7 @@ def main():
         print(f'Bot starting in {5-i} seconds, switch to r6 window!')
         sleep(1)
 
-    names = ['play','training','lone wolf','map','operator','bonus']
+    names = ['play','training','lone wolf','location','operator','bonus']
     img_paths = ['play','training','lone_wolf','spawn','doc','bonus']
 
     while 1:
