@@ -1,0 +1,44 @@
+name: GitHub clones counter for 14 days at every 8 hours and clones accumulator
+
+on:
+  schedule:
+    - cron: "0 */8 * * *"
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  accum-gh-clone-stats:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: Xample33/gh-action--accum-gh-stats@master
+        with:
+          deps_repo_owner:          Xample33
+          deps_repo_branch:         master
+          deps_repo_read_token:     ${{ github.token }}
+
+          stat_repo_owner:          Xample33
+          stat_repo:                Rainbow-Six-Auto-Renown-Farm
+          stat_entity:              clones
+          stat_repo_read_token:     ${{ secrets.READ_STATS_TOKEN }}
+          stats_list_key:           clones
+
+          #commit_msg_entity:        cl
+
+          curl_flags: >-
+            -H 'Cache-Control: no-cache'
+
+          output_repo_owner:        Xample33
+          output_repo:              Rainbow-Six-Auto-Renown-Farm--gh-stats
+          output_repo_branch:       master
+          output_repo_dir:          traffic/clones
+          output_repo_write_token:  ${{ secrets.WRITE_STATS_TOKEN }}
+
+          #env: >-
+          #  CONTINUE_ON_INVALID_INPUT=1
+          #  CONTINUE_ON_EMPTY_CHANGES=1
+          #  CONTINUE_ON_RESIDUAL_CHANGES=1
+          #  ENABLE_GENERATE_CHANGELOG_FILE=1
+          #  ENABLE_COMMIT_MESSAGE_DATE_WITH_TIME=1                            # insert the time string in format `HH:MMZ` additionally after the date in each commit message
+          #  ENABLE_COMMIT_MESSAGE_DATE_TIME_WITH_LAST_CHANGED_DATE_OFFSET=1   # insert datetime suffix as offset to the last changed date in format `-DDT` to note the closest changed date
+          #  CHANGELOG_FILE=changelog.txt
