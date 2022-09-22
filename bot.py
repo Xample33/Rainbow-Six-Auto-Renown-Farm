@@ -1,184 +1,152 @@
 from os import path, remove, system
-from pyautogui import size, locateOnScreen
+from pyautogui import locateOnScreen
 from pydirectinput import FAILSAFE, press
 from colorama import Fore, Style
-from pynput import keyboard
-from threading import Thread
-import cv2, time
+from pynput.keyboard import Listener
+from time import sleep
+from utils import utils as u
+import cv2
 
-FAILSAFE = False
-
-banner = """
-            ██████╗  █████╗ ██╗███╗   ██╗██████╗  ██████╗ ██╗    ██╗    ███████╗██╗██╗  ██╗               
-            ██╔══██╗██╔══██╗██║████╗  ██║██╔══██╗██╔═══██╗██║    ██║    ██╔════╝██║╚██╗██╔╝               
-            ██████╔╝███████║██║██╔██╗ ██║██████╔╝██║   ██║██║ █╗ ██║    ███████╗██║ ╚███╔╝                
-            ██╔══██╗██╔══██║██║██║╚██╗██║██╔══██╗██║   ██║██║███╗██║    ╚════██║██║ ██╔██╗                
-            ██║  ██║██║  ██║██║██║ ╚████║██████╔╝╚██████╔╝╚███╔███╔╝    ███████║██║██╔╝ ██╗               
-            ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚═════╝  ╚═════╝  ╚══╝╚══╝     ╚══════╝╚═╝╚═╝  ╚═╝               
-                                                                                                        
-            ██████╗ ███████╗███╗   ██╗ ██████╗ ██╗    ██╗███╗   ██╗    ███████╗ █████╗ ██████╗ ███╗   ███╗
-            ██╔══██╗██╔════╝████╗  ██║██╔═══██╗██║    ██║████╗  ██║    ██╔════╝██╔══██╗██╔══██╗████╗ ████║
-            ██████╔╝█████╗  ██╔██╗ ██║██║   ██║██║ █╗ ██║██╔██╗ ██║    █████╗  ███████║██████╔╝██╔████╔██║
-            ██╔══██╗██╔══╝  ██║╚██╗██║██║   ██║██║███╗██║██║╚██╗██║    ██╔══╝  ██╔══██║██╔══██╗██║╚██╔╝██║
-            ██║  ██║███████╗██║ ╚████║╚██████╔╝╚███╔███╔╝██║ ╚████║    ██║     ██║  ██║██║  ██║██║ ╚═╝ ██║
-            ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═══╝    ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝ by Xample33
-            """
-
-def check_size():
-    if 1920 and 1080 in size():
-        return 'assets\\1920x1080'
-    elif 1366 and 768 in size():
-        return 'assets\\1366x768'
-    elif 1360 and 768 in size():
-        return 'assets\\1366x768'
-    else:
-        return 'assets\\1920x1080'
+FAILSAFE = False      
     
 def config():
     if path.exists('config.txt'):
         with open('config.txt','r') as f:
             read = f.read()
-            if read == 'DOC=True':
-                return True
-            elif read == 'DOC=False':
-                return False
-            else:
-                remove("config.txt")
+            if read == 'DOC=True': return True
+            elif read == 'DOC=False': return False
+            else: remove('config.txt')
     else:
         print('Config file invalid or missing, creating..')
         
         while not doc:
             operator = input('\nDo you have DOC operator? (yes/no) -> ')
 
-            if operator == 'yes':
-                doc = True 
-            elif operator == 'no':
-                doc = False  
-            else:
-                print("Invalid input, valid input are \"yes\" and \"no\"")
+            if operator == 'yes': doc = True 
+            elif operator == 'no': doc = False  
+            else: print('Invalid input, valid input are \"yes\" and \"no\"')
 
-            with open('config.txt','w') as f:
-                f.write(f'DOC={doc}')
-
+        with open('config.txt','w') as f:
+            f.write(f'DOC={doc}')
+    
+def key_press(times, key):
+    if times == 0 or (stop):
+        return
+    else:
+        press(f'{key}')
+        key_press(times-1,key)
+    
 def locate(path,name):
     status(name)
-    for i in range(100):
-        if locateOnScreen(f'{path}', confidence=0.7):
-            time.sleep(0.3)
+    for i in range(10):
+        if locateOnScreen(f'{path}', confidence=0.7, grayscale=False, region = u.get_region(path)) and (not stop):
+            if 'play' in name:
+                key_press(1,'enter')
+                print('ok',stop)
+                return
+                
+            elif 'training' in name:
+                key_press(3, 'right')
+                key_press(1, 'enter')
+                return
+                
+            elif 'lone wolf' in name:
+                key_press(2, 'f')
+                key_press(1, 'right')
+                key_press(1, 'enter')
+                return
 
-            if name == 'menu':
-                press('enter')
+            elif 'map' in name:
+                sleep(0.2)
+                key_press(1, 'enter')
                 return
             
-            elif name == 'training':
-                for i in range(3): press('right')
-                press('enter')
+            elif ('operator' in name) and (config() == True):
+                key_press(6, 'right')
+                key_press(1, 'enter')
+                sleep(1.5)
+                key_press(1, 'enter')
+                return
+            elif ('operator' in name) and (config() == False):
+                key_press(1, 'enter')
+                sleep(1.5)
+                key_press(1, 'enter')
                 return
 
-            elif name == 'lonewolf':
-                for i in range(2): press('f')
-                press('right')
-                press('enter')
+            elif 'bonus' in name:
+                key_press(1, 'tab')
+                key_press(5, 'enter')
                 return
-
-            elif name == 'map':
-                press('enter')
-                return
-
-            elif (name == 'operator') and (config() == True):
-                for i in range(6): press("right")
-                press('enter')
-                time.sleep(1.5)
-                press('enter')
-                return
-            elif (name == 'operator') and (config() == False):
-                press('enter')
-                time.sleep(1.5)
-                press('enter')
-                return
-
-            elif name == 'bonus':
-                time.sleep(0.5)
-                press("tab")
-                for i in range(5): press("enter")
-                return
+                
+        elif not stop:
+            if 'play' in name:
+                key_press(5, 'up')
+                key_press(1,'down')
+                key_press(2,'left')
+            
+            elif 'bonus' in name:
+                sleep(1)
 
             else:
-                print('not found')
+                sleep(0.5)
 
-        else: 
-            if name == 'menu':
-                for i in range(5): press('up')
-                press('down')
-                for i in range(2): press('left') 
-
-            elif name == 'bonus':
-                time.sleep(2)
-
-            else:
-                time.sleep(0.5)
-
-    status(f'{Fore.RED}ERROR: Unable to find {name} button.')
+    if not stop: status(f'{Fore.RED}ERROR: Unable to find {name} button.')
 
 def status(state):
-    if 'ERROR' in state: state = f'{Fore.RED}ERROR' 
-    elif 'stopped' in state: state = f'{Fore.RED}stopped'
-
+    global stop
+    if 'ERROR' in state: pass
+    elif 'stopped' in state: state = f'{Fore.RED}stopped'; stop = True
     else: state = f'Looking for {state} button'    
+
     system('cls')
-    print(banner)
+    print(u.banner())
     print(f'\nCurrent action:{Fore.LIGHTGREEN_EX} {state} {Style.RESET_ALL}')
-    print(f'Games count:{Fore.LIGHTBLUE_EX} {match_count} {Style.RESET_ALL}(next in progress)')
-    print('Press [ + ] to exit')
+    print(f'Match count:{Fore.LIGHTBLUE_EX} {match_count} {Style.RESET_ALL}(next in progress)')
+    print(f'Press [ {u.abortkey()} ] to exit')
 
     if 'ERROR' in state: 
         print('\nError detected, please retry.')
         print('If you think that this is a bug, please open an issue on github.')
-        raise SystemExit
-
+        print('You can close this window')
+        
     if 'stopped' in state:
         print('\nStopped by user.')
-        raise SystemExit
-
+        print('You can close this window')
+          
 def main():
     global match_count
     match_count = 0
+    global stop
+    stop = False
     
-    print(banner)
-    input('\nPress enter to start...')
+    print(u.banner())
+    input('Press enter to start...')
     for i in range(5):
         system('cls')
-        print(banner)
+        print(u.banner())
         print(f'Bot starting in {5-i} seconds, switch to r6 window!')
-        time.sleep(1)
+        sleep(1)
 
-    names = ['menu','training','lonewolf','map','operator','bonus']
+    names = ['play','training','lone wolf','map','operator','bonus']
+    img_paths = ['play','training','lone_wolf','spawn','doc','bonus']
 
     while 1:
-        pos = 0
         if match_count == 0:
-            for element in ['play','training','lone_wolf','spawn','doc','bonus']:
-                locate(f'{check_size()}\{element}.png',names[pos])
-                pos += 1
+            for path in img_paths:
+                if not stop: locate(f'{u.check_size()}\{path}.png',names[img_paths.index(path)])
         else:
-            for element in ['spawn','doc','bonus']:
-                locate(f'{check_size()}\{element}.png',names[pos+3])
-                pos += 1
+            for path in [i for i in img_paths if i not in ['play','training','lone_wolf']]:
+                if not stop: locate(f'{u.check_size()}\{path}.png',names[(img_paths.index(path))])
         match_count += 1
-
-def on_press(key, abortKey='+'):  
+    return
+            
+def on_press(key, abortKey=u.abortkey()): 
     try:
         k = key.char
     except:
         k = key.name  
-    if k == abortKey:
-        status('stopped')
-        return False
+    if k == abortKey: status('stopped')
 
 if __name__=='__main__':
-    listener = keyboard.Listener(on_press=on_press)
-    listener.start()
-
-    Thread(target=main, args=(), name='main', daemon=True).start()
-    
-    listener.join() 
+    Listener(on_press=on_press).start() 
+    main()
