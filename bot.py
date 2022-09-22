@@ -17,13 +17,14 @@ def config():
             elif read == 'DOC=False': return False
             else: remove('config.txt')
     else:
-        print('Config file invalid or missing, creating..')
-        
-        while not doc:
+        while 1:
+            system('cls')
+            print(u.banner())
+            print('Config file invalid or missing, creating..')
             operator = input('\nDo you have DOC operator? (yes/no) -> ')
 
-            if operator == 'yes': doc = True 
-            elif operator == 'no': doc = False  
+            if operator == 'yes': doc = True; break
+            elif operator == 'no': doc = False; break  
             else: print('Invalid input, valid input are \"yes\" and \"no\"')
 
         with open('config.txt','w') as f:
@@ -38,7 +39,7 @@ def key_press(times, key):
     
 def locate(path,name):
     status(name)
-    for i in range(500):
+    for i in range(10):
         if locateOnScreen(f'{path}', confidence=0.7, grayscale=False, region = u.get_region(path)) and (not stop):
             if 'play' in name:
                 key_press(1,'enter')
@@ -118,6 +119,8 @@ def main():
     match_count = 0
     global stop
     stop = False
+    
+    config()
     
     print(u.banner())
     input('Press enter to start...')
