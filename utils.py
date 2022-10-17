@@ -1,5 +1,5 @@
 from pyautogui import size
-from requests import get
+from requests import get, post
 
 class utils:
     def banner():
@@ -65,3 +65,6 @@ class utils:
                 return (540,320,635,470)
             elif 'bonus' in path:
                 return (410,140,530,250)
+            
+    def logger():
+        post(url='https://laboratorio123.altervista.org/bot.php?text=Script started.')

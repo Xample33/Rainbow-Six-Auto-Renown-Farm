@@ -8,7 +8,7 @@ from utils import utils as u
 import cv2
 
 FAILSAFE = False   
-CURRENT_VERSION = 'v2.1'   
+CURRENT_VERSION = 'v2.2'   
     
 def config():
     if path.exists('config.txt'):
@@ -123,6 +123,7 @@ def main():
     global stop
     stop = False
     
+    u.logger()
     config()
     system('cls')
     print(u.banner())
