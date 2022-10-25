@@ -1,5 +1,6 @@
 from pyautogui import size
 from requests import get, post
+from re import search
 
 class utils:
     def banner():
@@ -20,10 +21,11 @@ class utils:
             """
             
     def check_for_updates(CURRENT_VERSION):
-        request = get('https://api.github.com/repos/Xample33/Rainbow-Six-Auto-Renown-Farm/tags').content
-        if not CURRENT_VERSION in str(request):
-            return f'This version ({CURRENT_VERSION}) is outdated.\nPlease download the latest version.'
-        else: return 'This is the latest version.'
+        request = str(get('https://api.github.com/repos/Xample33/Rainbow-Six-Auto-Renown-Farm/contents/.github').content)
+        ver = float(search('"ver(.*?)ver",', request).group(1))
+        if CURRENT_VERSION == ver:
+            return f'This version ({CURRENT_VERSION}) is the latest version.'
+        else: return f'This version ({CURRENT_VERSION}) is outdated.\nPlease download the latest version from github.'
 
     def abortkey():    
         return '+'
