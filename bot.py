@@ -8,7 +8,7 @@ from utils import utils as u
 import cv2
 
 FAILSAFE = False   
-CURRENT_VERSION = 2.2
+CURRENT_VERSION = 2.3
     
 def config():
     if path.exists('config.txt'):
