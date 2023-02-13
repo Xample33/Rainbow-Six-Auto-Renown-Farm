@@ -15,9 +15,12 @@ def config() -> Union[bool, None]:
     if path.exists('config.txt'):
         with open('config.txt','r') as f:
             read = f.read()
-            if read == 'DOC=True': return True
-            elif read == 'DOC=False': return False
-            else: remove('config.txt')
+            if read == 'DOC=True': 
+                return True
+            elif read == 'DOC=False': 
+                return False
+            else: 
+                remove('config.txt')
     else:
         valid = True
         doc = None
@@ -46,9 +49,9 @@ def key_press(times: int, key: str) -> None:
         press(f'{key}')
         times -= 1
     
-def locate(path, name: str):
+def locate(path: str, name: str):
     status(name)
-    for i in range(500):
+    for _ in range(500):
         if locateOnScreen(f'{path}', confidence=0.7, grayscale=False, region = u.get_region(path)) and (not stop):
             if 'play' in name:
                 key_press(1,'enter')
@@ -131,8 +134,8 @@ def status(state: str):
 
 def main():
     global match_count
-    match_count = 0
     global stop
+    match_count = 0
     stop = False
 
     config()
@@ -140,31 +143,33 @@ def main():
     print(u.banner())
     print(u.check_for_updates(CURRENT_VERSION))
     input('\nPress enter to start...')
-    for i in range(5):
+    for i in range(5, 0, -1):
         system('cls')
         print(u.banner())
-        print(f'Bot starting in {5-i} seconds, switch to r6 window!')
+        print(f'Bot starting in {i} seconds, switch to r6 window!')
         sleep(1)
 
     names = ['play','training','lone wolf','location','operator','bonus']
     img_paths = ['play','training','lone_wolf','spawn','doc','bonus']
 
-    while 1:
+    while True:
         if match_count == 0:
             for path in img_paths:
-                if not stop: locate(f'{u.check_size()}\{path}.png',names[img_paths.index(path)])
+                if not stop: 
+                    locate(f'{u.check_size()}\{path}.png',names[img_paths.index(path)])
         else:
             for path in [i for i in img_paths if i not in ['play','training','lone_wolf']]:
-                if not stop: locate(f'{u.check_size()}\{path}.png',names[(img_paths.index(path))])
+                if not stop: 
+                    locate(f'{u.check_size()}\{path}.png',names[(img_paths.index(path))])
         match_count += 1
-    return
             
 def on_press(key, abortKey=u.abortkey()): 
     try:
         k = key.char
-    except:
+    except Exception:
         k = key.name  
-    if k == abortKey: status('stopped')
+    if k == abortKey: 
+        status('stopped')
 
 if __name__=='__main__':
     Listener(on_press=on_press).start() 
