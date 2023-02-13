@@ -1,2 +1,2 @@
 @echo off
-python bot.py
+py -3 bot.py
