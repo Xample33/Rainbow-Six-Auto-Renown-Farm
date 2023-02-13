@@ -23,13 +23,13 @@ class utils:
             """
 
     @staticmethod
-    def check_for_updates(CURRENT_VERSION) -> str:
+    def check_for_updates(current_version: float) -> str:
         request = str(get('https://api.github.com/repos/Xample33/Rainbow-Six-Auto-Renown-Farm/contents/.github').content)
         ver = float(search('"ver(.*?)ver",', request).group(1))
-        if CURRENT_VERSION == ver:
-            return f'This version ({CURRENT_VERSION}) is the latest version.'
+        if current_version == ver:
+            return f'This version ({current_version}) is the latest version.'
         else: 
-            return f'This version ({CURRENT_VERSION}) is outdated.\nPlease download the latest version from github.'
+            return f'This version ({current_version}) is outdated.\nPlease download the latest version from github.'
 
     @staticmethod
     def abortkey() -> str:    
@@ -38,13 +38,13 @@ class utils:
     @staticmethod
     def check_size() -> str:
         if 1920 and 1080 in size():
-            return 'assets\\1920x1080'
+            return r'assets\1920x1080'
         elif 1366 and 768 in size():
-            return 'assets\\1366x768'
+            return r'assets\1366x768'
         elif 1360 and 768 in size():
-            return 'assets\\1366x768'
+            return r'assets\1366x768'
         else:
-            return 'assets\\1920x1080'
+            return r'assets\1920x1080'
 
     @staticmethod
     def get_region(path) -> Union[Tuple[int, int, int, int], None]:
