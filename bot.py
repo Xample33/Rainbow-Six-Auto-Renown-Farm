@@ -6,11 +6,12 @@ from pynput.keyboard import Listener
 from time import sleep
 from utils import utils as u
 import cv2
+from typing import Union
 
 FAILSAFE = False   
 CURRENT_VERSION = 2.3
     
-def config():
+def config() -> Union[bool, None]:
     if path.exists('config.txt'):
         with open('config.txt','r') as f:
             read = f.read()
@@ -19,28 +20,33 @@ def config():
             else: remove('config.txt')
     else:
         valid = True
-        while 1:
+        doc = None
+        while doc is None:
             system('cls')
             print(u.banner())
             print('Config file invalid or missing, creating..')
-            if not valid: print('Invalid input, valid input are \"yes\" and \"no\"')
-            operator = input('\nDo you have DOC operator? (yes/no) -> ')
+            if not valid: 
+                print('Invalid input, valid input are \"yes\" and \"no\"')
+                
+            operator = input('\nDo you have DOC operator? (yes/no) -> ').strip().casefold()
 
-            if operator == 'yes': doc = True; break
-            elif operator == 'no': doc = False; break  
-            else: valid = False
+            if operator == 'yes': 
+                doc = True
+            elif operator == 'no': 
+                doc = False  
+            else:
+                valid = False
 
         with open('config.txt','w') as f:
             f.write(f'DOC={doc}')
     
-def key_press(times, key):
-    if times == 0 or (stop):
-        return
-    else:
+def key_press(times: int, key: str) -> None:
+    """Presses a key a specific amount of times"""
+    while (times > 0) and (not stop):
         press(f'{key}')
-        key_press(times-1,key)
+        times -= 1
     
-def locate(path,name):
+def locate(path, name: str):
     status(name)
     for i in range(500):
         if locateOnScreen(f'{path}', confidence=0.7, grayscale=False, region = u.get_region(path)) and (not stop):
@@ -71,6 +77,7 @@ def locate(path,name):
                 sleep(1.5)
                 key_press(1, 'enter')
                 return
+            
             elif ('operator' in name) and (config() == False):
                 key_press(1, 'enter')
                 sleep(1.5)
@@ -94,13 +101,18 @@ def locate(path,name):
             else:
                 sleep(0.5)
 
-    if not stop: status(f'{Fore.RED}ERROR: Unable to find {name} button.')
+    if not stop: 
+        status(f'{Fore.RED}ERROR: Unable to find {name} button.')
 
-def status(state):
+def status(state: str):
     global stop
-    if 'ERROR' in state: pass
-    elif 'stopped' in state: state = f'{Fore.RED}stopped'; stop = True
-    else: state = f'Looking for {state} button'    
+    if 'ERROR' in state: 
+        pass
+    elif 'stopped' in state: 
+        state = f'{Fore.RED}stopped'
+        stop = True
+    else: 
+        state = f'Looking for {state} button'    
 
     system('cls')
     print(u.banner())
@@ -116,7 +128,7 @@ def status(state):
     if 'stopped' in state:
         print('\nStopped by user.')
         print('You can close this window')
-          
+
 def main():
     global match_count
     match_count = 0
