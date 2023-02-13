@@ -1,9 +1,11 @@
 from pyautogui import size
 from requests import get, post
 from re import search
+from typing import Tuple, Union
 
 class utils:
-    def banner():
+    @staticmethod
+    def banner() -> str:
         return """
             ██████╗  █████╗ ██╗███╗   ██╗██████╗  ██████╗ ██╗    ██╗    ███████╗██╗██╗  ██╗               
             ██╔══██╗██╔══██╗██║████╗  ██║██╔══██╗██╔═══██╗██║    ██║    ██╔════╝██║╚██╗██╔╝               
@@ -19,18 +21,22 @@ class utils:
             ██║  ██║███████╗██║ ╚████║╚██████╔╝╚███╔███╔╝██║ ╚████║    ██║     ██║  ██║██║  ██║██║ ╚═╝ ██║
             ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═══╝    ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝ by Xample33
             """
-            
-    def check_for_updates(CURRENT_VERSION):
+
+    @staticmethod
+    def check_for_updates(CURRENT_VERSION) -> str:
         request = str(get('https://api.github.com/repos/Xample33/Rainbow-Six-Auto-Renown-Farm/contents/.github').content)
         ver = float(search('"ver(.*?)ver",', request).group(1))
         if CURRENT_VERSION == ver:
             return f'This version ({CURRENT_VERSION}) is the latest version.'
-        else: return f'This version ({CURRENT_VERSION}) is outdated.\nPlease download the latest version from github.'
+        else: 
+            return f'This version ({CURRENT_VERSION}) is outdated.\nPlease download the latest version from github.'
 
-    def abortkey():    
+    @staticmethod
+    def abortkey() -> str:    
         return '+'
     
-    def check_size():
+    @staticmethod
+    def check_size() -> str:
         if 1920 and 1080 in size():
             return 'assets\\1920x1080'
         elif 1366 and 768 in size():
@@ -39,8 +45,9 @@ class utils:
             return 'assets\\1366x768'
         else:
             return 'assets\\1920x1080'
-        
-    def get_region(path):
+
+    @staticmethod
+    def get_region(path) -> Union[Tuple[int, int, int, int], None]:
         if '1366x768' in path:
             if 'play' in path:
                 return (0,50,300,250)
@@ -67,3 +74,5 @@ class utils:
                 return (540,320,635,470)
             elif 'bonus' in path:
                 return (410,140,530,250)
+            
+        return None
