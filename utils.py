@@ -24,7 +24,7 @@ def check_for_updates(current_version: float) -> str:
     request = str(get('https://api.github.com/repos/Xample33/Rainbow-Six-Auto-Renown-Farm/contents/.github').content)
     ver = float(search('"ver(.*?)ver",', request).group(1))
     if current_version == ver:
-        return f'This version ({current_version}) is the latest version.'
+        return f'This version ({current_version}) is the latest version!'
     else:
         return f'This version ({current_version}) is outdated.\nPlease download the latest version from github.'
 
