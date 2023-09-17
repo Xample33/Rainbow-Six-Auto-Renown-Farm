@@ -155,7 +155,7 @@ class RainbowSixAutoRenown:
         assets_dir = path.join(current_dir, 'assets')
         if not path.exists(assets_dir):
             self.require_stop = True
-            self.detailed_error = f'The folder "assets" was not found in the current execution directory, have you moved the r6sfarm.exe file?\n{path.dirname(__file__)}/assets'
+            self.detailed_error = f'The folder "assets" was not found in the current execution directory, have you moved the r6sfarm.exe file?\n{assets_dir}/assets'
             
             self.update(updater, 'action', '[b red]ERROR: Assets folder not found.')
             input('')
