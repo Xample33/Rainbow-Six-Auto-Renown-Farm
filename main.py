@@ -6,6 +6,7 @@ from pydirectinput import press
 from pyautogui import locateOnScreen
 
 from os import path
+import sys
 
 from console import RichTerminalUpdater
 import utils as u
@@ -146,7 +147,13 @@ class RainbowSixAutoRenown:
         
         #check if assets folder exists
         self.update(updater, 'action', 'Checking assets folder')
-        if not path.exists(f'{path.dirname(__file__)}/assets'):
+        if getattr(sys, 'frozen', False):
+            current_dir = sys._MEIPASS
+        else:
+            current_dir = path.dirname(path.abspath(__file__))
+
+        assets_dir = path.join(current_dir, 'assets')
+        if not path.exists(assets_dir):
             self.require_stop = True
             self.detailed_error = f'The folder "assets" was not found in the current execution directory, have you moved the r6sfarm.exe file?\n{path.dirname(__file__)}/assets'
             
