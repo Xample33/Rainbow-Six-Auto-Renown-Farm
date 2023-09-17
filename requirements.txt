@@ -1,4 +1,4 @@
-requests=2.31.0
+requests==2.31.0
 pydirectinput==1.0.4
 pyautogui==0.9.54
 pygetwindow==0.0.9
