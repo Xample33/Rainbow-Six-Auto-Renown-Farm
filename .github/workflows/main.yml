@@ -31,7 +31,7 @@ jobs:
 
       - name: Build Windows Executable
         run: |
-          python -m PyInstaller --onefile --name r6sfarm main.py
+          python -m PyInstaller --onefile --add-data "assets;assets" --name r6sfarm main.py
           echo D | xcopy assets dist\assets /e
 
       - name: Upload Artifact
