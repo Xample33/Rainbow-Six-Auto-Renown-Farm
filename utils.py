@@ -1,52 +1,38 @@
 from pyautogui import size
 from requests import get
-from re import search
 from typing import Tuple, Union
 
-def banner() -> str:
-    return """
-        ██████╗  █████╗ ██╗███╗   ██╗██████╗  ██████╗ ██╗    ██╗    ███████╗██╗██╗  ██╗
-        ██╔══██╗██╔══██╗██║████╗  ██║██╔══██╗██╔═══██╗██║    ██║    ██╔════╝██║╚██╗██╔╝
-        ██████╔╝███████║██║██╔██╗ ██║██████╔╝██║   ██║██║ █╗ ██║    ███████╗██║ ╚███╔╝
-        ██╔══██╗██╔══██║██║██║╚██╗██║██╔══██╗██║   ██║██║███╗██║    ╚════██║██║ ██╔██╗
-        ██║  ██║██║  ██║██║██║ ╚████║██████╔╝╚██████╔╝╚███╔███╔╝    ███████║██║██╔╝ ██╗
-        ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚═════╝  ╚═════╝  ╚══╝╚══╝     ╚══════╝╚═╝╚═╝  ╚═╝
-
-        ██████╗ ███████╗███╗   ██╗ ██████╗ ██╗    ██╗███╗   ██╗    ███████╗ █████╗ ██████╗ ███╗   ███╗
-        ██╔══██╗██╔════╝████╗  ██║██╔═══██╗██║    ██║████╗  ██║    ██╔════╝██╔══██╗██╔══██╗████╗ ████║
-        ██████╔╝█████╗  ██╔██╗ ██║██║   ██║██║ █╗ ██║██╔██╗ ██║    █████╗  ███████║██████╔╝██╔████╔██║
-        ██╔══██╗██╔══╝  ██║╚██╗██║██║   ██║██║███╗██║██║╚██╗██║    ██╔══╝  ██╔══██║██╔══██╗██║╚██╔╝██║
-        ██║  ██║███████╗██║ ╚████║╚██████╔╝╚███╔███╔╝██║ ╚████║    ██║     ██║  ██║██║  ██║██║ ╚═╝ ██║
-        ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═══╝    ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝ by Xample33
-        """
-
 def check_for_updates(current_version: float) -> str:
-    request = str(get('https://api.github.com/repos/Xample33/Rainbow-Six-Auto-Renown-Farm/contents/.github').content)
-    ver = float(search('"ver(.*?)ver",', request).group(1))
-    if current_version == ver:
-        return f'This version ({current_version}) is the latest version!'
-    else:
-        return f'This version ({current_version}) is outdated.\nPlease download the latest version from github.'
+    try:
+        # Send a GET request to the GitHub API to fetch the latest release
+        response = get('https://api.github.com/repos/Xample33/Rainbow-Six-Auto-Renown-Farm/releases/latest')
+    
+        release_info = response.json()
+        latest_version = float(release_info['tag_name'].replace('v',''))
+        if current_version == latest_version:
+            return '[bold green]Latest.'
+        else:
+            return '[bold dark_orange3]Outdated, download the latest version from github.'
+        
+    except Exception as e:
+        return f'Error checking for updates.'
 
-def abortkey() -> str:
-    return '+'
-
-def check_size() -> str:
+def check_size(onlysize: bool = False) -> Union[str, None]:
     if 1920 and 1080 in size():
-        return r'assets\1920x1080'
+        return r'assets\1920x1080' if not onlysize else '1920x1080'
     elif 1366 and 768 in size():
-        return r'assets\1366x768'
+        return r'assets\1366x768' if not onlysize else '1366x768'
     elif 1360 and 768 in size():
-        return r'assets\1366x768'
+        return r'assets\1366x768' if not onlysize else '1366x768'
     else:
-        return r'assets\1920x1080'
+        return None
 
-def get_region(path) -> Union[Tuple[int, int, int, int], None]:
+def get_region(path: str) -> Union[Tuple[int, int, int, int], None]:
     if '1366x768' in path:
         if 'play' in path:
             return (0,50,300,250)
         elif 'training' in path:
-            return (1000,230,1300,420)
+            return (1050,50,750,1000)
         elif 'lone_wolf' in path:
             return (230,350,500,420)
         elif 'spawn' in path:
@@ -59,14 +45,18 @@ def get_region(path) -> Union[Tuple[int, int, int, int], None]:
         if 'play' in path:
             return (0,70,370,300)
         elif 'training' in path:
-            return (1435,330,1780,580)
+            return (1050,50,750,1000)
+        elif 'grounds' in path:
+            return (1410,230,470,390)
         elif 'lone_wolf' in path:
-            return (320,510,710,570)
+            return (200,400,480,90)
         elif 'spawn' in path:
-            return (30,230,535,365)
-        elif 'doc' in path:
-            return (540,320,635,470)
+            return (30,230,525,135)
+        elif 'operators' in path:
+            return (185, 235, 90, 90)
         elif 'bonus' in path:
             return (410,140,530,250)
+        elif 'renown' in path:
+            return (100, 470, 105, 30)
 
     return None

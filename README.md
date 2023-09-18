@@ -1,6 +1,6 @@
 # Rainbow Six Siege Auto Renown Farm
 
-### ⚠ Year 8 season 1 just relased, ubisoft made a few changes at the graphic menus, update coming soon! ⚠	
+### VERSION 3.0 JUST RELASED, LOTS OF NEW FEATURES!
 
 This is a python bot that can farm renown completely afk.<br>
 With booster you can obtain up to 1100 renown/h.
