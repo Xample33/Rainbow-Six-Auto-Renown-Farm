@@ -57,6 +57,6 @@ def get_region(path: str) -> Union[Tuple[int, int, int, int], None]:
         elif 'bonus' in path:
             return (410,140,530,250)
         elif 'renown' in path:
-            return (100, 470, 75, 30)
+            return (100, 470, 105, 30)
 
     return None
