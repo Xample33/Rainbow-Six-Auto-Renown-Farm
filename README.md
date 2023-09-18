@@ -1,14 +1,34 @@
-# Rainbow Six Siege Auto Renown Farm
+![image](https://github.com/Xample33/Rainbow-Six-Auto-Renown-Farm/assets/54323615/32c9c033-2484-4767-8b33-931dd30cab38)
 
-![GitHub all releases](https://img.shields.io/github/downloads/Xample33/Rainbow-Six-Auto-Renown-Farm/total)
-![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Xample33/Rainbow-Six-Auto-Renown-Farm/main)
----
+<h1 align="center"> Rainbow Six Siege Auto Renown Farm </h1>
+<p align="center"><img alt="GitHub last commit (branch)" src="https://img.shields.io/github/last-commit/Xample33/Rainbow-Six-Auto-Renown-Farm/main">  <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/Xample33/Rainbow-Six-Auto-Renown-Farm/total"></p>
 
-### VERSION 3.0 JUST RELASED, LOTS OF NEW FEATURES!
+This is a bot written in python that can farm renown cometely afk.<br>
+Is totally undetectable because it plays like a normal user!<br>
+With booster you can obtain up to 1100 renown/h.
 
->This is a python bot that can farm renown completely afk.<br>
->With booster you can obtain up to 1100 renown/h.
+___
 
-## Check the [wiki](https://github.com/Xample33/Rainbow-Six-Auto-Renown-Farm/wiki/Instructions) for instructions.
+## Pre-requisites:
+- Resolution: 1920x1080 or 1366x768  or 1360x768
+-  Aspect ratio: 16:9
+-  Screen: fullscreen or borderless
+-  Language: english <br />
+
+&nbsp; **Matchmaking options:**
+- Game mode preferences: only protect hostage
+- Map preferences: only tower <br />
+
+> See [this](https://github.com/Xample33/Rainbow-Six-Auto-Renown-Farm/wiki/Images) for images.
+
+## How to use:
+1) Go to [relases](https://github.com/Xample33/Rainbow-Six-Auto-Renown-Farm/releases) and download `R6S-Auto-Renown-Farm.zip`.
+2) Extract the zip where do you want.
+3) Run `r6sfarm.exe`.
+6) Enjoy!
+
+<br />
+
+Any problem? Open an [issue](https://github.com/Xample33/Rainbow-Six-Auto-Renown-Farm/issues) or contact me on [telegram](https://t.me/xamplee) (@Xamplee)
 
 > ☆ If you like the project, please leave a star, is free!
