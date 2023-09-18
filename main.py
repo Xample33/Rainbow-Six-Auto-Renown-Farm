@@ -11,7 +11,7 @@ from console import RichTerminalUpdater
 import utils as u
 
 CONFIDENCE_LEVEL = 0.7
-CURRENT_VERSION = 3.0
+CURRENT_VERSION = 3.1
 
 class RainbowSixAutoRenown:
     def __init__(self) -> None:
