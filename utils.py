@@ -12,7 +12,7 @@ def check_for_updates(current_version: float) -> str:
         if current_version == latest_version:
             return '[bold green]Latest.'
         else:
-            return '[bold dark_orange3]Outdated, download the latest version from github.'
+            return f'[bold dark_orange3]Outdated, download the latest version ({latest_version}) from github.'
         
     except Exception as e:
         return f'Error checking for updates.'
@@ -20,9 +20,7 @@ def check_for_updates(current_version: float) -> str:
 def check_size(onlysize: bool = False) -> Union[str, None]:
     if 1920 and 1080 in size():
         return r'assets\1920x1080' if not onlysize else '1920x1080'
-    elif 1366 and 768 in size():
-        return r'assets\1366x768' if not onlysize else '1366x768'
-    elif 1360 and 768 in size():
+    elif 1366 and 768 in size() or 1360 and 768 in size():
         return r'assets\1366x768' if not onlysize else '1366x768'
     else:
         return None
@@ -30,33 +28,37 @@ def check_size(onlysize: bool = False) -> Union[str, None]:
 def get_region(path: str) -> Union[Tuple[int, int, int, int], None]:
     if '1366x768' in path:
         if 'play' in path:
-            return (0,50,300,250)
+            return (5, 73, 277, 153)
         elif 'training' in path:
-            return (1050,50,750,1000)
-        elif 'lone_wolf' in path:
-            return (230,350,500,420)
+            return (831, 489, 142, 107)
+        elif 'grounds' in path:
+            return (994, 286, 235, 104)
+        elif 'difficulty' in path:
+            return (48, 268, 111, 61)
         elif 'spawn' in path:
-            return (0,180,450,280)
-        elif 'doc' in path:
-            return (380,250,480,350)
+            return (55, 183, 106, 61)
+        elif 'operators' in path:
+            return (109, 145, 105, 103)
         elif 'bonus' in path:
-            return (280,105,380,180)
+            return (278, 88, 112, 87)
+        elif 'renown' in path:
+            return (60, 318, 100, 54)
     else:
         if 'play' in path:
-            return (0,70,370,300)
+            return (13, 106, 372, 206)
         elif 'training' in path:
-            return (1050,50,750,1000)
+            return (1178, 695, 179, 137)
         elif 'grounds' in path:
-            return (1410,230,470,390)
-        elif 'lone_wolf' in path:
-            return (200,400,480,90)
+            return (1406, 408, 313, 131)
+        elif 'difficulty' in path:
+            return (74, 386, 143, 67)
         elif 'spawn' in path:
-            return (30,230,525,135)
+            return (87, 269, 131, 66)
         elif 'operators' in path:
-            return (185, 235, 90, 90)
+            return (168, 215, 124, 123)
         elif 'bonus' in path:
-            return (410,140,530,250)
+            return (398, 130, 136, 112)
         elif 'renown' in path:
-            return (100, 470, 105, 30)
+            return (94, 455, 121, 60)
 
     return None

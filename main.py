@@ -6,7 +6,6 @@ from pydirectinput import press
 from pyautogui import locateOnScreen
 
 from os import path
-import sys
 
 from console import RichTerminalUpdater
 import utils as u
@@ -38,19 +37,20 @@ class RainbowSixAutoRenown:
     # Modify your locate method to use the new key_press method
     def locate(self, img_path: str, name: str) -> None:
         force_update = False
-        self.update(updater, 'action', f'Running - {name}')
+        self.update(updater, 'action', f'Running -> {name}\nDont move the mouse!')
         
         for i in range(300):
             if (i % 5 == 0 and i!=0) or force_update:
                 force_update = False
                 self.loop_count = i
-                self.update(updater, 'action', f'Running - {name}')
+                self.update(updater, 'action', f'Running -> {name}\nDont move the mouse!')
             
             if i == 299:
                 self.require_stop = True
                 self.detailed_error = f'Unable to locate {img_path} on screen, contact the developer.'
                 self.update(updater, 'action', '[b red]ERROR: Unable to locate image.')
-                break
+                input('')
+                exit()
             
             if locateOnScreen(f'{path.dirname(__file__)}/{img_path}', confidence=CONFIDENCE_LEVEL, region=u.get_region(img_path), grayscale=True):
                 sleep(0.05)
@@ -67,7 +67,7 @@ class RainbowSixAutoRenown:
                     self.key_press([(1, 'enter')])
                     break
 
-                elif 'lone_wolf' in name:
+                elif 'difficulty' in name:
                     self.key_press([(2, 'f'), (1, 'right'), (1, 'enter')])
                     break
                     
@@ -138,21 +138,17 @@ class RainbowSixAutoRenown:
         self.update(updater, 'action', 'Checking resolution')
         if not u.check_size():
             self.require_stop = True
-            self.detailed_error = 'The current resolution is not supported, please use 1920x1080 or 1366x768 or 1360x768.'
+            self.detailed_error = 'The current resolution is not supported, please use 1920x1080 or 1366x768 or 1360x768. The game must be played in the first screen.'
             
             self.update(updater, 'action', '[b red]ERROR: Resolution not supported.')
-            input('Press enter to exit.')
+            input('')
             exit()
         self.display_size = u.check_size(onlysize=True)
         
         #check if assets folder exists
         self.update(updater, 'action', 'Checking assets folder')
-        if getattr(sys, 'frozen', False):
-            current_dir = sys._MEIPASS
-        else:
-            current_dir = path.dirname(path.abspath(__file__))
 
-        assets_dir = path.join(current_dir, 'assets')
+        assets_dir = path.join(path.dirname(path.abspath(__file__)), 'assets')
         if not path.exists(assets_dir):
             self.require_stop = True
             self.detailed_error = f'The folder "assets" was not found in the current execution directory, have you moved the r6sfarm.exe file?\n{assets_dir}/assets'
@@ -171,7 +167,7 @@ class RainbowSixAutoRenown:
             
         #starting main
         self.update(updater, 'action', 'Running')
-        img_paths = ['play.png', 'training.png', 'grounds.png', 'lone_wolf.png', 'spawn.png', 'operators.png', 'bonus.png', 'renown.png']
+        img_paths = ['play.png', 'training.png', 'grounds.png', 'difficulty.png', 'spawn.png', 'operators.png', 'bonus.png', 'renown.png']
         for img_path in img_paths:
             self.locate(f'{u.check_size()}\{img_path}', img_path.replace('.png', ''))
     
@@ -179,7 +175,7 @@ class RainbowSixAutoRenown:
         while True:
             self.match_count += 1
             
-            for img_path in (elem for elem in img_paths if elem not in set(['play.png', 'training.png', 'grounds.png', 'lone_wolf.png'])):
+            for img_path in (elem for elem in img_paths if elem not in set(['play.png', 'training.png', 'grounds.png', 'difficulty.png'])):
                 self.locate(f'{u.check_size()}\{img_path}', img_path.replace('.png', ''))
 
 if __name__ == '__main__':
