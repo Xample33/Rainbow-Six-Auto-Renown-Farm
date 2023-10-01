@@ -2,5 +2,5 @@ requests==2.31.0
 pydirectinput==1.0.4
 pyautogui==0.9.54
 pygetwindow==0.0.9
-opencv-python==4.8.0.76
+opencv-python==4.8.1.78.76
 rich==13.5.2
