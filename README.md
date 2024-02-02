@@ -1,3 +1,10 @@
+<h1 align="center"> WARNING </h1></p>
+<p align="center"><b> Terrorist Hunt has been removed in Y8S4.</b></p>
+<p align="center"><b> Unfortunately this bot will not work anymore.</b></p>
+<p align="center"><b> There are no other ways to farm renown AFK :(</b></p>
+
+<br>
+
 ![image](https://github.com/Xample33/Rainbow-Six-Auto-Renown-Farm/assets/54323615/32c9c033-2484-4767-8b33-931dd30cab38)
 
 <h1 align="center"> Rainbow Six Siege Auto Renown Farm </h1>
